@@ -1,7 +1,6 @@
-(ns attractors-clj.dynamic
-  (:require [quil.core :as q]))
-
-(defn tell [in] (println (.toString in)) in)
+(ns attractors-clj.lorenz
+  (:require [quil.core :as q]
+            [attractors-clj.common :refer [third]]))
 
 (defn dx [x y sigma]
   (* sigma (- y x)))
@@ -9,8 +8,6 @@
   (- (* x (- rho z)) y))
 (defn dz [x y z beta]
   (- (* x y) (* beta z)))
-
-(defn third [coll] (nth coll 2))
 
 ; x y z are system state, sigma, rho, beta are system parameters
 (defn lorenz-system []
@@ -42,8 +39,8 @@
   (q/background 255)
   (q/fill (q/random 255))
   (q/camera 
-   (- (* 10 (q/frame-count)) (/ (q/width) 2.0))
-   (- (* 10 (q/frame-count)) (/ (q/height) 2.0))
+   (identity (/ (q/width) 2.0))
+   (identity (/ (q/height) 2.0))
    (/ (/ (q/height) 2.0) (Math/tan (/ (* Math/PI 60.0) 360.0)))
    (/ (q/width) 2.0) 
    (/ (q/height) 2.0) 
@@ -51,7 +48,6 @@
    0 
    1 
    0)
-  (q/print-camera)
   (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
     (doseq [[x y z] (take (q/frame-count) lorenz)]
      (q/point x y z))))
